@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worth It?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1a1208;
+  --paper: #f5f0e8;
+  --paper2: #ede7d5;
+  --cream: #e8dfc8;
+  --gold: #c8922a;
+  --gold-light: #e8b84b;
+  --red: #c0392b;
+  --green: #2d6a4f;
+  --muted: #8a7a5a;
+  --border: #c8b898;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.6;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* Header */
+.masthead {
+  text-align: center;
+  border-bottom: 3px double var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.masthead::before {
+  content: '◆ ◇ ◆';
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.masthead h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.masthead h1 span {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.masthead p {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0;
+  color: var(--border);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Input blocks */
+.input-block {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.input-block label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prefix {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--gold);
+  line-height: 1;
+  padding-top: 2px;
+}
+
+input[type="number"], input[type="text"] {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  padding: 4px 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+input[type="number"]:focus, input[type="text"]:focus {
+  border-bottom-color: var(--gold);
+}
+
+input::placeholder { color: var(--border); }
+
+.input-hint {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* Category pills */
+.category-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.cat-pill {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 5px 12px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.cat-pill:hover { border-color: var(--gold); color: var(--ink); }
+.cat-pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* Verdict card */
+.verdict {
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-top: 28px;
+  display: none;
+  animation: fadeUp 0.4s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.verdict.show { display: block; }
+
+.verdict-hours {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  line-height: 0.9;
+  color: var(--ink);
+  margin: 12px 0 4px;
+}
+
+.verdict-hours-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.verdict-breakdown {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.verdict-breakdown strong {
+  color: var(--ink);
+  font-style: normal;
+}
+
+.verdict-quote {
+  font-size: 15px;
+  color: var(--ink);
+  font-style: italic;
+  line-height: 1.6;
+  padding: 14px 16px;
+  background: var(--paper);
+  border-left: 3px solid var(--gold);
+  text-align: left;
+  margin-top: 4px;
+}
+
+/* Time equivalents */
+.equivalents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.equiv-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.equiv-card .e-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.equiv-card .e-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 10px;
+  color: var(--border);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <h1>Time <span>Cost</span></h1>
+    <p>Every purchase costs time. How much of yours?</p>
+  </div>
+
+  <!-- Hourly Rate -->
+  <div class="input-block">
+    <label>Your Hourly Rate</label>
+    <div class="input-row">
+      <span class="prefix">$</span>
+      <input type="number" id="hourlyRate" placeholder="0" min="1" max="10000">
+    </div>
+    <div class="input-hint">After-tax take-home preferred</div>
+  </div>
+
+  <!-- Hours per week -->
+  <div class="input-block">
+    <label>Hours You Work Per Week</label>
+    <div class="input-row">
+      <input type="number" id="hoursPerWeek" placeholder="40" min="1" max="168">
+      <span class="prefix" style="color:var(--muted);font-size:16px;">hrs/wk</span>
+    </div>
+  </div>
+
+  <!-- Item name -->
+  <div class="input-block">
+    <label>Item Name <span style="font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label>
+    <div class="input-row">
+      <input type="text" id="itemName" placeholder="e.g. new tires, dinner out…">
+    </div>
+  </div>
+
+  <!-- Price -->
+  <div class="input-block">
+    <label>Price</label>
+    <div class="input-row">
+      <span class="prefix">$</span>
+      <input type="number" id="price" placeholder="0" min="0">
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="verdict" id="verdict">
+    <div class="verdict-hours" id="verdictHours">0</div>
+    <div class="verdict-hours-label">hours of your life</div>
+    <div class="verdict-breakdown" id="verdictBreakdown"></div>
+    <div class="equivalents" id="equivalents"></div>
+  </div>
+
+  <footer>◆ &nbsp; time is the only currency that matters &nbsp; ◆</footer>
+</div>
+
+<script>
+  let selectedCat = 'essential';
+
+  ['hourlyRate', 'hoursPerWeek', 'price', 'itemName'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+  });
+
+  function fmtHours(h) {
+    if (h < 0.1) return '< 0.1';
+    if (h >= 1000) return Math.round(h).toLocaleString();
+    if (h >= 10) return Math.round(h).toString();
+    return h.toFixed(1);
+  }
+
+  function calculate() {
+    const rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+    const wkHours = parseFloat(document.getElementById('hoursPerWeek').value) || 40;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const item = document.getElementById('itemName').value.trim();
+
+    const verdict = document.getElementById('verdict');
+
+    if (!rate || !price) {
+      verdict.classList.remove('show');
+      return;
+    }
+
+    const rawHours = price / rate;
+    const days = rawHours / (wkHours / 5);
+    const weeks = rawHours / wkHours;
+
+    document.getElementById('verdictHours').textContent = fmtHours(rawHours);
+
+    // Breakdown
+    const itemLabel = item || 'This purchase';
+    let breakdown = `<strong>${itemLabel}</strong> costs <strong>$${price.toLocaleString()}</strong> — at <strong>$${rate}/hr</strong> that's `;
+    if (rawHours < 1) {
+      breakdown += `<strong>${Math.round(rawHours * 60)} minutes</strong> of work.`;
+    } else if (rawHours < 8) {
+      breakdown += `<strong>${fmtHours(rawHours)} hours</strong> of work.`;
+    } else {
+      breakdown += `<strong>${fmtHours(rawHours)} hours</strong> — about <strong>${days.toFixed(1)} workdays</strong>.`;
+    }
+    document.getElementById('verdictBreakdown').innerHTML = breakdown;
+
+    // Equivalents
+    const eqData = [
+      { val: weeks < 1 ? (days < 1 ? Math.round(rawHours * 60) + ' min' : days.toFixed(1) + ' days') : weeks.toFixed(1) + ' wks', label: 'of work time' },
+      { val: '$' + (rawHours * (rate * 0.3)).toLocaleString('en-US', {maximumFractionDigits: 0}), label: 'future value (10yr @ 7%)' },
+      { val: (rawHours / 24).toFixed(1) + ' days', label: 'of your finite life' },
+      { val: Math.round(rawHours / (wkHours / 7)) + ' days', label: 'calendar days to earn' },
+    ];
+
+    document.getElementById('equivalents').innerHTML = eqData.map(e => `
+      <div class="equiv-card">
+        <div class="e-val">${e.val}</div>
+        <div class="e-label">${e.label}</div>
+      </div>
+    `).join('');
+
+    verdict.classList.remove('show');
+    void verdict.offsetWidth;
+    verdict.classList.add('show');
+  }
+</script>
+</body>
+</html>
